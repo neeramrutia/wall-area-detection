@@ -8,7 +8,6 @@ The WebXR Device API is not yet compatible with all browsers. Check https://cani
 
 ## Instructions
 
-Navigate to [Demo](https://wonderful-albattani-95489f.netlify.app/) with your mobile device.
 
 After you pressed the *START AR* Button
 1. Move your phone around, until you see a marker on your screen.
