@@ -175,10 +175,6 @@ function onSelect() {
     const point3D = matrixToVector(reticle.matrix);
     measurements.push(point3D);
     
-    const screenPoint = toScreenPosition(point3D, renderer.xr.getCamera(camera));
-    screenMeasurements.push(screenPoint);  // Store the screen position
-    console.log("screen point : " , screenPoint);
-    
     if (measurements.length == 2) {
       // Calculate the 3D distance
       let distance = Math.round(getDistance(measurements) * 100);
@@ -257,17 +253,18 @@ function render(timestamp, frame) {
     })
     if(labels[0]!=undefined && labels[1]!=undefined){
       let pos = toScreenPosition(labels[0].point, renderer.xr.getCamera(camera));
-    let x = pos.x;
-    let y = pos.y;
-    let pos1 = toScreenPosition(labels[1].point, renderer.xr.getCamera(camera));
-    let x1 = pos1.x;
-    let y1 = pos1.y;
-    pixelDistance = Math.round(Math.sqrt(
-      Math.pow(x - x1, 2) +
-      Math.pow(y - y1, 2)))
-    }
-    let text = document.getElementsByClassName("label");
-    text.textContent = text.textContent + pixelDistance
+      let x = pos.x;
+      let y = pos.y;
+      let pos1 = toScreenPosition(labels[1].point, renderer.xr.getCamera(camera));
+      let x1 = pos1.x;
+      let y1 = pos1.y;
+      pixelDistance = Math.round(Math.sqrt(
+        Math.pow(x - x1, 2) +
+        Math.pow(y - y1, 2)))
+        let text = document.getElementsByClassName("label");
+      text.textContent = text.textContent + pixelDistance
+      }
+    
 
   }
   renderer.render(scene, camera);
