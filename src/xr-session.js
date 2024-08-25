@@ -182,27 +182,7 @@ function onSelect() {
     if (measurements.length == 2) {
       // Calculate the 3D distance
       let distance = Math.round(getDistance(measurements) * 100);
-
-      // Calculate the pixel distance
-      // let pixelDistance = Math.round(Math.sqrt(
-      //   Math.pow(screenMeasurements[0].x - screenMeasurements[1].x, 2) +
-      //   Math.pow(screenMeasurements[0].y - screenMeasurements[1].y, 2)
-      // ));
       let pixelDistance = 0;
-      labels.push({ div: text, point: getCenterPoint(measurements) });
-        if(labels[0]!=undefined && labels[1]!=undefined){
-          let pos = toScreenPosition(labels[0].point, renderer.xr.getCamera(camera));
-        let x = pos.x;
-        let y = pos.y;
-        let pos1 = toScreenPosition(labels[1].point, renderer.xr.getCamera(camera));
-        let x1 = pos1.x;
-        let y1 = pos1.y;
-        pixelDistance = Math.round(Math.sqrt(
-          Math.pow(x - x1, 2) +
-          Math.pow(y - y1, 2)))
-        }
-        
-      
 
       // Display the 3D distance in cm
       let text = document.createElement('div');
@@ -212,7 +192,7 @@ function onSelect() {
       document.querySelector('#container').appendChild(text);
 
       
-
+      labels.push({ div: text, point: getCenterPoint(measurements) });
       // Reset measurements
       measurements = [];
       screenMeasurements = [];  // Reset screen measurements
@@ -275,6 +255,19 @@ function render(timestamp, frame) {
       let y = pos.y;
       label.div.style.transform = "translate(-50%, -50%) translate(" + x + "px," + y + "px)";
     })
+    if(labels[0]!=undefined && labels[1]!=undefined){
+      let pos = toScreenPosition(labels[0].point, renderer.xr.getCamera(camera));
+    let x = pos.x;
+    let y = pos.y;
+    let pos1 = toScreenPosition(labels[1].point, renderer.xr.getCamera(camera));
+    let x1 = pos1.x;
+    let y1 = pos1.y;
+    pixelDistance = Math.round(Math.sqrt(
+      Math.pow(x - x1, 2) +
+      Math.pow(y - y1, 2)))
+    }
+    let text = document.getElementsByClassName("label");
+    text.textContent = text.textContent + pixelDistance
 
   }
   renderer.render(scene, camera);
