@@ -144,54 +144,40 @@ function initXR() {
   animate()
 }
 
-// function onSelect() {
-//   if (reticle.visible) {
-//     measurements.push(matrixToVector(reticle.matrix));
-//     if (measurements.length == 2) {
-//       let distance = Math.round(getDistance(measurements) * 100);
-
-//       let text = document.createElement('div');
-//       text.className = 'label';
-//       text.style.color = 'rgb(255,255,255)';
-//       text.textContent = distance + ' cm';
-//       document.querySelector('#container').appendChild(text);
-
-//       labels.push({div: text, point: getCenterPoint(measurements)});
-
-//       measurements = [];
-//       currentLine = null;
-//     } else {
-//       currentLine = initLine(measurements[0]);
-//       scene.add(currentLine);
-//     }
-//   }
-// }
-
-
-let screenMeasurements = [];  // Add this line to store screen positions
+function countPixels(){
+  if(labels.length == 2){
+    let pos1 = toScreenPosition(labels[0].point, renderer.xr.getCamera(camera));
+    let x1 = pos1.x;
+    let y1 = pos1.y;
+    let pos2 = toScreenPosition(labels[1].point, renderer.xr.getCamera(camera));
+    let x2 = pos2.x;
+    let y2 = pos2.y;
+    return Math.round(Math.sqrt(
+      Math.pow(x1 - x2, 2) +
+      Math.pow(y1 - y2, 2)
+    ));
+  }
+}
 
 function onSelect() {
   if (reticle.visible) {
-    const point3D = matrixToVector(reticle.matrix);
-    measurements.push(point3D);
-    
+    measurements.push(matrixToVector(reticle.matrix));
     if (measurements.length == 2) {
-      // Calculate the 3D distance
       let distance = Math.round(getDistance(measurements) * 100);
-      let pixelDistance = 0;
-
-      // Display the 3D distance in cm
+      let pixels = 0;
       let text = document.createElement('div');
       text.className = 'label';
       text.style.color = 'rgb(255,255,255)';
-      text.textContent = `${distance} cm, ${pixelDistance} px`;  // Display both distances
-      document.querySelector('#container').appendChild(text);
-
       
-      labels.push({ div: text, point: getCenterPoint(measurements) });
-      // Reset measurements
+
+      labels.push({div: text, point: getCenterPoint(measurements)});
+      if(labels.length == 2){
+        pixels = countPixels();
+      }
+
+      text.textContent = distance + ' cm' + pixels + 'px';
+      document.querySelector('#container').appendChild(text);
       measurements = [];
-      screenMeasurements = [];  // Reset screen measurements
       currentLine = null;
     } else {
       currentLine = initLine(measurements[0]);
@@ -199,7 +185,6 @@ function onSelect() {
     }
   }
 }
-
 
 function onWindowResize() {
   width = window.innerWidth;
@@ -251,20 +236,6 @@ function render(timestamp, frame) {
       let y = pos.y;
       label.div.style.transform = "translate(-50%, -50%) translate(" + x + "px," + y + "px)";
     })
-    if(labels[0]!=undefined && labels[1]!=undefined){
-      let pos = toScreenPosition(labels[0].point, renderer.xr.getCamera(camera));
-      let x = pos.x;
-      let y = pos.y;
-      let pos1 = toScreenPosition(labels[1].point, renderer.xr.getCamera(camera));
-      let x1 = pos1.x;
-      let y1 = pos1.y;
-      pixelDistance = Math.round(Math.sqrt(
-        Math.pow(x - x1, 2) +
-        Math.pow(y - y1, 2)))
-        let text = document.getElementsByClassName("label");
-      text.textContent = text.textContent + pixelDistance
-      }
-    
 
   }
   renderer.render(scene, camera);
