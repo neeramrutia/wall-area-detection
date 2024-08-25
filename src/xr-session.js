@@ -144,38 +144,29 @@ function initXR() {
   animate()
 }
 
-function countPixels(){
-  if(labels.length == 2){
-    let pos1 = toScreenPosition(labels[0].point, renderer.xr.getCamera(camera));
-    let x1 = pos1.x;
-    let y1 = pos1.y;
-    let pos2 = toScreenPosition(labels[1].point, renderer.xr.getCamera(camera));
-    let x2 = pos2.x;
-    let y2 = pos2.y;
-    return Math.round(Math.sqrt(
-      Math.pow(x1 - x2, 2) +
-      Math.pow(y1 - y2, 2)
-    ));
-  }
-}
+
 
 function onSelect() {
   if (reticle.visible) {
     measurements.push(matrixToVector(reticle.matrix));
     if (measurements.length == 2) {
       let distance = Math.round(getDistance(measurements) * 100);
-      let pixels = 0;
+      let screenPosition1 = toScreenPosition(measurements[0], camera);
+      let screenPosition2 = toScreenPosition(measurements[1], camera);
+
+      // Calculate pixel distance
+      let pixelDistance = Math.sqrt(
+        Math.pow(screenPosition2.x - screenPosition1.x, 2) +
+        Math.pow(screenPosition2.y - screenPosition1.y, 2)
+      );
       let text = document.createElement('div');
       text.className = 'label';
       text.style.color = 'rgb(255,255,255)';
       
 
       labels.push({div: text, point: getCenterPoint(measurements)});
-      if(labels.length == 2){
-        pixels = countPixels();
-      }
 
-      text.textContent = distance + ' cm' + pixels + 'px';
+      text.textContent = distance + ' cm' + pixelDistance + 'px';
       document.querySelector('#container').appendChild(text);
       measurements = [];
       currentLine = null;
