@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "NODE_OPTIONS=--openssl-legacy-provider webpack",
-    "serve": "webpack-dev-server",
-    "watch": "webpack --watch"
+    "serve": "NODE_OPTIONS=--openssl-legacy-provider webpack-dev-server",
+    "watch": "NODE_OPTIONS=--openssl-legacy-provider webpack --watch"
   },
   "repository": {
     "type": "git",

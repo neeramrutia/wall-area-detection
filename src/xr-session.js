@@ -183,7 +183,7 @@ function onSelect() {
       let distance = Math.round(getDistance(measurements) * 100);
 
       // Calculate the pixel distance
-      const pixelDistance = Math.round(Math.sqrt(
+      let pixelDistance = Math.round(Math.sqrt(
         Math.pow(screenMeasurements[0].x - screenMeasurements[1].x, 2) +
         Math.pow(screenMeasurements[0].y - screenMeasurements[1].y, 2)
       ));
